@@ -1,0 +1,9 @@
+CODEX_GPT/
+assets/background.png
+assets/selection-background.png
+assets/pages/
+assets/fleche.png
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
