@@ -1,0 +1,49 @@
+name: Deploy static Coloring Game to Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare static files
+        shell: bash
+        run: |
+          mkdir -p _site/assets/pages-fast
+          cp index.html style.css game.js .nojekyll README.md _site/
+          cp assets/background-fast.jpg assets/selection-background-fast.jpg _site/assets/
+          cp assets/back-arrow-button.png assets/cards-button.png assets/crayon.png _site/assets/
+          cp assets/feutre.png assets/gomme.png assets/pinceaux.png _site/assets/
+          cp assets/pages-fast/*.png _site/assets/pages-fast/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
